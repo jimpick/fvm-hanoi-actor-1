@@ -47,7 +47,7 @@ impl State {
             1 => &self.tower1,
             2 => &self.tower2,
             3 => &self.tower3,
-            _ => { abort!(USR_ILLEGAL_STATE, "Invalid from value: {}", from); }
+            _ => { abort!(USR_ILLEGAL_ARGUMENT, "Invalid from value: {}", from); }
         };
         if source.len() == 0 { return false };
         let top_disc = source[source.len() - 1];
@@ -55,7 +55,7 @@ impl State {
             1 => &self.tower1,
             2 => &self.tower2,
             3 => &self.tower3,
-            _ => { abort!(USR_ILLEGAL_STATE, "Invalid to value: {}", to); }
+            _ => { abort!(USR_ILLEGAL_ARGUMENT, "Invalid to value: {}", to); }
         };
         if target.len() == 0 { return true };
         let bottom_disc = target[target.len() - 1];
@@ -65,20 +65,20 @@ impl State {
 
     fn move_disc(&mut self, from: u8, to: u8) -> &mut State {
         if !self.is_legal(from, to) {
-            abort!(USR_ILLEGAL_STATE, "Illegal move, {} => {}", from, to)
+            abort!(USR_FORBIDDEN, "Illegal move, {} => {}", from, to)
         }
         let source = match from {
             1 => &mut self.tower1,
             2 => &mut self.tower2,
             3 => &mut self.tower3,
-            _ => { abort!(USR_ILLEGAL_STATE, "Invalid from value: {}", from); }
+            _ => { abort!(USR_ILLEGAL_ARGUMENT, "Invalid from value: {}", from); }
         };
         let disc = source.pop().unwrap();
         let target = match to {
             1 => &mut self.tower1,
             2 => &mut self.tower2,
             3 => &mut self.tower3,
-            _ => { abort!(USR_ILLEGAL_STATE, "Invalid to value: {}", to); }
+            _ => { abort!(USR_ILLEGAL_ARGUMENT, "Invalid to value: {}", to); }
         };
         target.push(disc);
         self
