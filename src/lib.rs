@@ -21,9 +21,44 @@ macro_rules! abort {
 }
 
 /// The state object.
-#[derive(Serialize_tuple, Deserialize_tuple, Clone, Debug, Default)]
+#[derive(Serialize_tuple, Deserialize_tuple, Clone, Debug)]
 pub struct State {
-    pub count: u64,
+    tower1: Vec<u8>,
+    tower2: Vec<u8>,
+    tower3: Vec<u8>,
+}
+
+impl State {
+    fn new(n: u8) -> State {
+        let mut tower1: Vec<u8> = Vec::new();
+        let tower2: Vec<u8> = Vec::new();
+        let tower3: Vec<u8> = Vec::new();
+
+        for i in 1..=n {
+            tower1.push(i);
+        }
+        tower1.reverse();
+
+        State { tower1, tower2, tower3 }
+    }
+
+    fn move_disc(&mut self, from: u8, to: u8) -> &mut State {
+        let source = match from {
+            1 => &mut self.tower1,
+            2 => &mut self.tower2,
+            3 => &mut self.tower3,
+            _ => { panic!("Invalid from value: {}", from); }
+        };
+        let disc = source.pop().unwrap();
+        let target = match to {
+            1 => &mut self.tower1,
+            2 => &mut self.tower2,
+            3 => &mut self.tower3,
+            _ => { panic!("Invalid to value: {}", to); }
+        };
+        target.push(disc);
+        self
+    }
 }
 
 /// We should probably have a derive macro to mark an object as a state object,
@@ -74,12 +109,12 @@ pub fn invoke(params: u32) -> u32 {
     // Conduct method dispatch. Handle input parameters and return data.
     let ret: Option<RawBytes> = match sdk::message::method_number() {
         1 => constructor(),
-        2 => say_hello(),
-        3 => {
-            let params = sdk::message::params_raw(params).unwrap().1;
-            let params = RawBytes::new(params);
-            set_count(params)
-        },
+        2 => get(),
+        // 3 => {
+        //     let params = sdk::message::params_raw(params).unwrap().1;
+        //     let params = RawBytes::new(params);
+        //     set_count(params)
+        // },
         _ => abort!(USR_UNHANDLED_MESSAGE, "unrecognized method"),
     };
 
@@ -109,18 +144,16 @@ pub fn constructor() -> Option<RawBytes> {
         abort!(USR_FORBIDDEN, "constructor invoked by non-init actor");
     }
 
-    let state = State::default();
+    let state = State::new(5);
     state.save();
     None
 }
 
 /// Method num 2.
-pub fn say_hello() -> Option<RawBytes> {
+pub fn get() -> Option<RawBytes> {
     let mut state = State::load();
-    state.count += 1;
-    state.save();
 
-    let ret = to_vec(format!("Hello hanoi #{}!", &state.count).as_str());
+    let ret = to_vec(format!("{:?}", &state).as_str());
     match ret {
         Ok(ret) => Some(RawBytes::new(ret)),
         Err(err) => {
@@ -133,21 +166,21 @@ pub fn say_hello() -> Option<RawBytes> {
     }
 }
 
-/// Method num 3.
-pub fn set_count(params: RawBytes) -> Option<RawBytes> {
-    let mut state = State::load();
-    state.count = 23;
-    state.save();
-
-    let ret = to_vec(format!("Set count params {:x?}!", params.bytes()).as_str());
-    match ret {
-        Ok(ret) => Some(RawBytes::new(ret)),
-        Err(err) => {
-            abort!(
-                USR_ILLEGAL_STATE,
-                "failed to serialize return value: {:?}",
-                err
-            );
-        }
-    }
-}
+// Method num 3.
+// pub fn set_count(params: RawBytes) -> Option<RawBytes> {
+//     let mut state = State::load();
+//     state.count = 23;
+//     state.save();
+// 
+//     let ret = to_vec(format!("Set count params {:x?}!", params.bytes()).as_str());
+//     match ret {
+//         Ok(ret) => Some(RawBytes::new(ret)),
+//         Err(err) => {
+//             abort!(
+//                 USR_ILLEGAL_STATE,
+//                 "failed to serialize return value: {:?}",
+//                 err
+//             );
+//         }
+//     }
+// }
