@@ -70,12 +70,16 @@ impl State {
 /// Put all methods inside an impl struct and annotate it with a derive macro
 /// that handles state serde and dispatch.
 #[no_mangle]
-pub fn invoke(_: u32) -> u32 {
+pub fn invoke(params: u32) -> u32 {
     // Conduct method dispatch. Handle input parameters and return data.
     let ret: Option<RawBytes> = match sdk::message::method_number() {
         1 => constructor(),
         2 => say_hello(),
-        3 => set_count(),
+        3 => {
+            let params = sdk::message::params_raw(params).unwrap().1;
+            let params = RawBytes::new(params);
+            set_count(params)
+        },
         _ => abort!(USR_UNHANDLED_MESSAGE, "unrecognized method"),
     };
 
@@ -130,12 +134,12 @@ pub fn say_hello() -> Option<RawBytes> {
 }
 
 /// Method num 3.
-pub fn set_count() -> Option<RawBytes> {
+pub fn set_count(params: RawBytes) -> Option<RawBytes> {
     let mut state = State::load();
     state.count = 23;
     state.save();
 
-    let ret = to_vec(format!("Set count #{}!", &state.count).as_str());
+    let ret = to_vec(format!("Set count params {:x?}!", params.bytes()).as_str());
     match ret {
         Ok(ret) => Some(RawBytes::new(ret)),
         Err(err) => {
