@@ -110,11 +110,11 @@ pub fn invoke(params: u32) -> u32 {
     let ret: Option<RawBytes> = match sdk::message::method_number() {
         1 => constructor(),
         2 => get(),
-        // 3 => {
-        //     let params = sdk::message::params_raw(params).unwrap().1;
-        //     let params = RawBytes::new(params);
-        //     set_count(params)
-        // },
+        3 => {
+            let params = sdk::message::params_raw(params).unwrap().1;
+            let params = RawBytes::new(params);
+            move_disc(params)
+        },
         _ => abort!(USR_UNHANDLED_MESSAGE, "unrecognized method"),
     };
 
@@ -166,21 +166,23 @@ pub fn get() -> Option<RawBytes> {
     }
 }
 
-// Method num 3.
-// pub fn set_count(params: RawBytes) -> Option<RawBytes> {
-//     let mut state = State::load();
-//     state.count = 23;
-//     state.save();
-// 
-//     let ret = to_vec(format!("Set count params {:x?}!", params.bytes()).as_str());
-//     match ret {
-//         Ok(ret) => Some(RawBytes::new(ret)),
-//         Err(err) => {
-//             abort!(
-//                 USR_ILLEGAL_STATE,
-//                 "failed to serialize return value: {:?}",
-//                 err
-//             );
-//         }
-//     }
-// }
+/// Method num 3.
+pub fn move_disc(params: RawBytes) -> Option<RawBytes> {
+    let mut state = State::load();
+    let from = params[0] - b'0';
+    let to = params[1] - b'0';
+    state.move_disc(from, to);
+    state.save();
+
+    let ret = to_vec(format!("{:?}", from, to, &state).as_str());
+    match ret {
+        Ok(ret) => Some(RawBytes::new(ret)),
+        Err(err) => {
+            abort!(
+                USR_ILLEGAL_STATE,
+                "failed to serialize return value: {:?}",
+                err
+            );
+        }
+    }
+}
