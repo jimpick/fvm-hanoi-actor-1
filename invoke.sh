@@ -27,4 +27,4 @@ lotus chain invoke $ADDRESS $METHOD $PARAMS | tee $WORKDIR/output.log
 
 OUTPUT=$(tail -1 $WORKDIR/output.log)
 
-echo Decoded Output: $(echo $OUTPUT | base64 -d)
+echo Decoded Output: $(echo $OUTPUT | base64 -d | sed 's,^.*State ,,')

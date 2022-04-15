@@ -25,5 +25,6 @@ echo Next step:
 echo ./invoke.sh $ID '<method num>' '<encoded-params>'
 echo
 echo
-echo "eg. ./invoke.sh $ID 2"
-echo "    ./invoke.sh $ID 3" '$(echo 12 | base64)'
+echo "eg. ./invoke.sh $ID 2   # Get state"
+echo "    ./invoke.sh $ID 3" '$(echo 12 | base64)   # Move disc from tower 1 to tower 2'
+echo "    ./play.sh $ID   # GUI for game written in bash"
