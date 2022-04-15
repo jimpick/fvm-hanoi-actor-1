@@ -1137,27 +1137,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "fil_hello_world_actor"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "cid",
- "fvm",
- "fvm_ipld_blockstore 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "fvm_ipld_encoding 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "fvm_sdk",
- "fvm_shared",
- "libsecp256k1",
- "multihash",
- "rand 0.8.5",
- "rand_chacha 0.3.1",
- "serde",
- "serde_tuple",
- "wasm-builder",
- "wasmtime",
-]
-
-[[package]]
 name = "fil_logger"
 version = "0.1.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1583,6 +1562,27 @@ name = "half"
 version = "1.8.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "eabb4a44450da02c90444cf74558da904edde8fb4e9035a9a6a4e15445af0bd7"
+
+[[package]]
+name = "hanoi_actor_1"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "cid",
+ "fvm",
+ "fvm_ipld_blockstore 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "fvm_ipld_encoding 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "fvm_sdk",
+ "fvm_shared",
+ "libsecp256k1",
+ "multihash",
+ "rand 0.8.5",
+ "rand_chacha 0.3.1",
+ "serde",
+ "serde_tuple",
+ "wasm-builder",
+ "wasmtime",
+]
 
 [[package]]
 name = "hashbrown"

@@ -1,5 +1,5 @@
 [package]
-name = "fil_hello_world_actor"
+name = "hanoi_actor_1"
 version = "0.1.0"
 edition = "2021"
 

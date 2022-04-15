@@ -115,7 +115,7 @@ pub fn say_hello() -> Option<RawBytes> {
     state.count += 1;
     state.save();
 
-    let ret = to_vec(format!("Hello world #{}!", &state.count).as_str());
+    let ret = to_vec(format!("Hello hanoi #{}!", &state.count).as_str());
     match ret {
         Ok(ret) => Some(RawBytes::new(ret)),
         Err(err) => {
