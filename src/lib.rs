@@ -75,6 +75,7 @@ pub fn invoke(_: u32) -> u32 {
     let ret: Option<RawBytes> = match sdk::message::method_number() {
         1 => constructor(),
         2 => say_hello(),
+        3 => set_count(),
         _ => abort!(USR_UNHANDLED_MESSAGE, "unrecognized method"),
     };
 
@@ -116,6 +117,25 @@ pub fn say_hello() -> Option<RawBytes> {
     state.save();
 
     let ret = to_vec(format!("Hello hanoi #{}!", &state.count).as_str());
+    match ret {
+        Ok(ret) => Some(RawBytes::new(ret)),
+        Err(err) => {
+            abort!(
+                USR_ILLEGAL_STATE,
+                "failed to serialize return value: {:?}",
+                err
+            );
+        }
+    }
+}
+
+/// Method num 3.
+pub fn set_count() -> Option<RawBytes> {
+    let mut state = State::load();
+    state.count = 23;
+    state.save();
+
+    let ret = to_vec(format!("Set count #{}!", &state.count).as_str());
     match ret {
         Ok(ret) => Some(RawBytes::new(ret)),
         Err(err) => {
