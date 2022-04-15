@@ -42,7 +42,31 @@ impl State {
         State { tower1, tower2, tower3 }
     }
 
+    fn is_legal(&self, from: u8, to: u8) -> bool {
+        let source = match from {
+            1 => &self.tower1,
+            2 => &self.tower2,
+            3 => &self.tower3,
+            _ => { panic!("Invalid from value: {}", from); }
+        };
+        if source.len() == 0 { return false };
+        let top_disc = source[source.len() - 1];
+        let target = match to {
+            1 => &self.tower1,
+            2 => &self.tower2,
+            3 => &self.tower3,
+            _ => { panic!("Invalid to value: {}", to); }
+        };
+        if target.len() == 0 { return true };
+        let bottom_disc = target[target.len() - 1];
+        if top_disc < bottom_disc { return true }
+        else { return false }
+    }
+
     fn move_disc(&mut self, from: u8, to: u8) -> &mut State {
+        if !self.is_legal(from, to) {
+            panic!("Illegal move, {} => {}", from, to)
+        }
         let source = match from {
             1 => &mut self.tower1,
             2 => &mut self.tower2,
@@ -151,7 +175,7 @@ pub fn constructor() -> Option<RawBytes> {
 
 /// Method num 2.
 pub fn get() -> Option<RawBytes> {
-    let mut state = State::load();
+    let state = State::load();
 
     let ret = to_vec(format!("{:?}", &state).as_str());
     match ret {
@@ -174,7 +198,7 @@ pub fn move_disc(params: RawBytes) -> Option<RawBytes> {
     state.move_disc(from, to);
     state.save();
 
-    let ret = to_vec(format!("{:?}", from, to, &state).as_str());
+    let ret = to_vec(format!("{:?}", &state).as_str());
     match ret {
         Ok(ret) => Some(RawBytes::new(ret)),
         Err(err) => {
