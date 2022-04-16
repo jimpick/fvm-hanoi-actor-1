@@ -1,7 +1,7 @@
 fvm-hanoi-actor-1
 ===
 
-An experiment in writing a Filecoin Virtual Machine smart contract using Rust. Play [Towers of Hanoi](https://en.wikipedia.org/wiki/Tower_of_Hanoi), by installing a custom actor (aka. smart contract) that stores the state in the Filecoin blockstore.
+An experiment in writing a Filecoin Virtual Machine smart contract using Rust. Play [Towers of Hanoi](https://en.wikipedia.org/wiki/Tower_of_Hanoi), by installing a custom actor (aka. smart contract) that stores the state in your local devnet Lotus node's blockstore.
 
 For more info on the FVM:
 
@@ -58,6 +58,8 @@ Next step:
 
 ## Create an instance of the actor
 
+The "CID" of your actor will be different. Copy the output from the previous command.
+
 ```
 $ ./create-actor.sh bafk2bzaceanrv7ylrgg7vyieamdflg2g33g3oipnqnf4tkdihp26d656ivsy2
 Code CID: bafk2bzaceanrv7ylrgg7vyieamdflg2g33g3oipnqnf4tkdihp26d656ivsy2
@@ -77,7 +79,14 @@ eg. ./invoke.sh t01028 2   # Get state
     ./play.sh t01028   # GUI for game written in bash
 ```
 
+When you create an instance, you actor will have a Filecoin address (eg. "t01028" here)
+that you can use to play the game by calling the methods on the smart contract.
+
+You can create as many instances as you want. Each instance is a new game.
+
 ## Get the state from your actor (method 2)
+
+The address will be different, so copy the output from the previous command.
 
 ```
 $ ./invoke.sh t01028 2
@@ -95,6 +104,12 @@ Decoded Output: { tower1: [5, 4, 3, 2, 1], tower2: [], tower3: [] }
 You can see the "decoded output" contains the state of the game, which consists of a number of discs stacked on three towers.
 
 ## Move a disc from one tower to another (method 3)
+
+Again, the address will be different, so use your address. The argument in this
+case is "12" which means "move a disc from tower 1 to tower 2".
+
+If you want to move the disc from tower 1 to tower 3, use "13". Likewise, to
+move a disc from tower 2 to tower 3, use "23".
 
 ```
 $ ./invoke.sh t01028 3 $(echo 12 | base64)
