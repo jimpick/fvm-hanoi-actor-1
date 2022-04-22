@@ -24,6 +24,7 @@ Raul's Steps for demo (from Slack Channel)
 * Set up a Lotus devnet
   * Experimental branch: experimental/fvm-m2
   * Instructions: https://lotus.filecoin.io/developers/local-network/
+  * Pre-built container images for Docker/Kubernetes: https://github.com/jimpick/lotus-fvm-localnet
 * Install Actor
   * lotus chain install-actor <path-to-wasm-bytecode>
 * Instantiate Actor
@@ -34,8 +35,6 @@ Raul's Steps for demo (from Slack Channel)
 ## Setup
 
 Once you have a Lotus devnet setup, make sure it is running and the `lotus` binary is in your path. There is an included `.env` file that you can edit to modify the path for the scripts below.
-
-* https://github.com/jimpick/lotus-fvm-localnet
 
 ## Build the WASM bundle for the actor
 
