@@ -35,6 +35,8 @@ Raul's Steps for demo (from Slack Channel)
 
 Once you have a Lotus devnet setup, make sure it is running and the `lotus` binary is in your path. There is an included `.env` file that you can edit to modify the path for the scripts below.
 
+* https://github.com/jimpick/lotus-fvm-localnet
+
 ## Build the WASM bundle for the actor
 
 `cargo build`
